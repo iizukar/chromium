@@ -1,6 +1,6 @@
 FROM alpine:3.18
 
-# Install dependencies with corrected package names
+# Install dependencies
 RUN apk add --no-cache \
     chromium \
     xvfb \
@@ -8,7 +8,11 @@ RUN apk add --no-cache \
     bash \
     python3 \
     git \
-    fluxbox  # Window manager for better UX
+    fluxbox \
+    procps  # For process management
+
+# Create non-root user
+RUN adduser -D chromiumuser
 
 # Clone noVNC
 RUN git clone https://github.com/novnc/noVNC.git /opt/noVNC \
@@ -19,8 +23,12 @@ RUN git clone https://github.com/novnc/noVNC.git /opt/noVNC \
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Cleanup to reduce image size
+# Cleanup
 RUN rm -rf /var/cache/apk/* /tmp/*
+
+# Switch to non-root user
+USER chromiumuser
+WORKDIR /home/chromiumuser
 
 EXPOSE 8080
 CMD ["/start.sh"]
