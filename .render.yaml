@@ -1,7 +1,10 @@
 services:
-  - type: web
-    name: chromium-vnc
-    runtime: docker
-    port: 8080
-    env: alpine
+  - name: chromium-novnc
+    type: web
+    env: docker
+    region: oregon
+    docker:
+      file: Dockerfile
     plan: free
+    healthCheckPath: "/"
+    autoDeploy: true
