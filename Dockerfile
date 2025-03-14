@@ -1,13 +1,14 @@
 FROM alpine:3.18
 
-# Install dependencies
+# Install dependencies with corrected package names
 RUN apk add --no-cache \
     chromium \
     xvfb \
-    tightvncserver \
+    tigervnc \
     bash \
     python3 \
-    git
+    git \
+    fluxbox  # Window manager for better UX
 
 # Clone noVNC
 RUN git clone https://github.com/novnc/noVNC.git /opt/noVNC \
