@@ -18,17 +18,17 @@ RUN apk --no-cache add \
 RUN pip3 install --no-cache-dir websockify
 
 # Manually download noVNC from GitHub
-# (Here we use v1.3.0, but you can pick another stable release tag)
+# (Using v1.3.0, but you can pick another release if you like)
 RUN mkdir /noVNC && \
     wget https://github.com/novnc/noVNC/archive/refs/tags/v1.3.0.tar.gz -O /tmp/noVNC.tar.gz && \
     tar xvf /tmp/noVNC.tar.gz -C /noVNC --strip-components=1 && \
     rm /tmp/noVNC.tar.gz
 
-# Copy our startup script into the container
+# Copy our startup script
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Expose port 8080 for noVNC
+# Expose port 8080 (noVNC server)
 EXPOSE 8080
 
 CMD ["/start.sh"]
