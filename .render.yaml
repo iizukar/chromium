@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: chromium-vnc
+    runtime: docker
+    port: 8080
+    env: alpine
