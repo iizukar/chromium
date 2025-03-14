@@ -1,10 +1,11 @@
 # Use a minimal base image
 FROM debian:bullseye-slim
 
-# Install dependencies: including ca-certificates to validate SSL certificates
+# Install dependencies: include ca-certificates, git, and other required packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     wget \
+    git \
     xvfb \
     fluxbox \
     x11vnc \
@@ -33,14 +34,14 @@ RUN mkdir -p /root/.fluxbox && echo "\
   [exit] (Exit)\n\
 [end]" > /root/.fluxbox/menu
 
-# Expose the noVNC port
+# Expose the noVNC port (default is 6080)
 EXPOSE 6080
 
-# Set the DISPLAY environment variable
+# Set the DISPLAY environment variable for all processes
 ENV DISPLAY=:99
 
-# Start services: Xvfb, fluxbox, x11vnc, and noVNC proxy
+# Start all services with a delay to ensure Xvfb is ready
 CMD Xvfb :99 -screen 0 1280x720x24 & \
     fluxbox & \
     x11vnc -display :99 -forever -nopw -listen 0.0.0.0 -xkb & \
-    /opt/noVNC/utils/novnc_proxy --vnc localhost:5900
+    sleep 5 && /opt/noVNC/utils/novnc_proxy --vnc localhost:5900
