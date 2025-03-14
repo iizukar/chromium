@@ -8,16 +8,19 @@ sleep 2
 DISPLAY=:99 fluxbox &
 sleep 2
 
-# Automatically launch Chromium in the background
-DISPLAY=:99 chromium --no-sandbox --disable-gpu &
+# Launch Chromium with recommended flags for Alpine in a container
+DISPLAY=:99 chromium \
+  --no-sandbox \
+  --disable-gpu \
+  --disable-dev-shm-usage \
+  --disable-software-rasterizer \
+  --disable-seccomp-filter-sandbox \
+  --disable-setuid-sandbox \
+  &
 
-# Start websockify in the background
-# Serves noVNC (HTML/JS) from /noVNC on port 8080, bridging VNC at 5900
+# Start websockify in the background, serving noVNC on port 8080
 websockify -D --web=/noVNC 0.0.0.0:8080 localhost:5900
 sleep 1
 
-# Finally, start the VNC server on display :99
-# -nopw    -> no password
-# -forever -> never exit
-# -shared  -> allow multiple clients
+# Start the VNC server on display :99
 x11vnc -display :99 -nopw -forever -shared
